@@ -1,8 +1,22 @@
+def rotate(val):
+    return ((val << 1) & (~17)) | (val >> 3)
+
+
+def getPossible(val):
+    possible = [val]
+    tmp = val
+    while rotate(tmp) != val:
+        tmp = rotate(tmp)
+        possible += [tmp]
+    return possible
+
+
 class Tuile():
     """ tuile stores information about a tuile state
     and it's possible rotation"""
     def __init__(self, val):
         self.val = int(val, 16)
+        self.possible = getPossible(val)
 
     def hasConnectorUp(self):
         return (self.val & 1) != 0
