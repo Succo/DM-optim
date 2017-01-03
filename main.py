@@ -20,7 +20,8 @@ def main():
         for i in range(width):
             tuiles += [Tuile(line[i])]
     g = Grille(width, height, tuiles)
-    print(g.get(0, 1))
+    g.constrainBorder()
+    g.prettyPrint()
 
 if __name__ == "__main__":
     main()
