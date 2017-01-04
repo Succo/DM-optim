@@ -18,7 +18,7 @@ def main():
             width = len(line)-1  # -1 for the \n
         height += 1
         for i in range(width):
-            tuiles += [Tuile(line[i])]
+            tuiles += [Tuile(line[i], i, height)]
     g = Grille(width, height, tuiles)
     g.constrainBorder()
     g.prettyPrint()
