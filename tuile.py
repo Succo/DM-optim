@@ -59,6 +59,13 @@ class Grille():
             print(t.assigned)
         print()
 
+    def print_sol(self, sol):
+        for i in range(self.height):
+            line = ""
+            for j in range(self.width):
+                line += format(sol[i*self.width+j], 'x')
+            print(line)
+
     # Solver core function
     def constrain_border(self):
         """ constrain_border imposes no connection outside on all borders """

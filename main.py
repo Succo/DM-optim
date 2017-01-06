@@ -21,7 +21,7 @@ def main():
     g = Grille(width, height, tuiles)
     g.constrain_border()
     for sol in g.solve():
-        print(sol)
+        g.print_sol(sol)
 
 if __name__ == "__main__":
     main()
