@@ -22,6 +22,7 @@ def main():
     g.constrain_border()
     for sol in g.solve():
         g.print_sol(sol)
+        g.picture_from_sol(sol)
 
 if __name__ == "__main__":
     main()

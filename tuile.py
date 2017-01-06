@@ -1,5 +1,8 @@
 import copy
 
+import cv2
+import numpy as np
+
 
 def rotate(val):
     """ rotate shift all bits by one, move the last bit first """
@@ -65,6 +68,16 @@ class Grille():
             for j in range(self.width):
                 line += format(sol[i*self.width+j], 'x')
             print(line)
+
+    def picture_from_sol(self, sol):
+        tiles = [cv2.imread("tuile/{}.png".format(format(i, 'x')), -1)
+                 for i in range(16)]
+        lines = []
+        for i in range(self.height):
+            lines += [np.concatenate([tiles[sol[i*self.width + j]] for
+                                      j in range(self.width)], axis=1)]
+        vis = np.concatenate(lines, axis=0)
+        cv2.imwrite("out/graph.png", vis)
 
     # Solver core function
     def constrain_border(self):
