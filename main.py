@@ -6,7 +6,6 @@ from tuile import Grille, Tuile
 
 def main():
     args = sys.argv
-    print(args)
     if len(args) != 2 or args[1] != "-s":
         print("Run the program with -s and input from stdin")
         return

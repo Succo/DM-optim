@@ -6,8 +6,8 @@ def rotate(val):
     return ((val << 1) & (~17)) | (val >> 3)
 
 
-def getPossible(val):
-    """ getPossible generates all rotations possible for a value """
+def get_possible(val):
+    """get_possible generates all rotations possible for a value """
     possible = [val]
     tmp = val
     while rotate(tmp) != val:
@@ -21,14 +21,14 @@ class Tuile():
     and it's possible rotation"""
     def __init__(self, val, x, y):
         val = int(val, 16)
-        self.possible = getPossible(val)
+        self.possible = get_possible(val)
         self.assigned = None
         # positions
         self.x = x
         self.y = y
 
-    def connectUp(self, conn):
-        """ connectUp imposes or not a path Up based on conn value """
+    def connect_up(self, conn):
+        """ connect_up imposes or not a path Up based on conn value """
         self.possible = [val for val in self.possible if (val & 1) == conn]
         return len(self.possible) != 0
 
@@ -36,8 +36,8 @@ class Tuile():
         """ getUp returns 1 if the tuile is connected Up, 0 otherwise """
         return (self.assigned & 1)
 
-    def connectLeft(self, conn):
-        """ connectLeft imposes or not a path Left based on conn value """
+    def connect_left(self, conn):
+        """ connect_left imposes or not a path Left based on conn value """
         self.possible = [val for val in self.possible if (val & 2) >> 1 == conn]
         return len(self.possible) != 0
 
@@ -45,8 +45,8 @@ class Tuile():
         """ getLeft returns 1 if the tuile is connected Left, 0 otherwise """
         return (self.assigned & 2) >> 1
 
-    def connectDown(self, conn):
-        """ connectDown imposes or not a path Down based on conn value """
+    def connect_down(self, conn):
+        """ connect_down imposes or not a path Down based on conn value """
         self.possible = [val for val in self.possible if (val & 4) >> 2 == conn]
         return len(self.possible) != 0
 
@@ -54,8 +54,8 @@ class Tuile():
         """ getDown returns 1 if the tuile is connected Down, 0 otherwise """
         return (self.assigned & 4) >> 2
 
-    def connectRight(self, conn):
-        """ connectRight imposes or not a path Right based on conn value """
+    def connect_right(self, conn):
+        """ connect_right imposes or not a path Right based on conn value """
         self.possible = [val for val in self.possible if (val & 8) >> 3 == conn]
         return len(self.possible) != 0
 
@@ -88,14 +88,14 @@ class Grille():
     def constrain_border(self):
         """ constrain_border imposes no connection outside on all borders """
         for i in range(self.width):
-            if not self.get(i, 0).connectUp(0):
+            if not self.get(i, 0).connect_up(0):
                 return False
-            if not self.get(i, self.height-1).connectDown(0):
+            if not self.get(i, self.height-1).connect_down(0):
                 return False
         for j in range(self.height):
-            if not self.get(0, j).connectLeft(0):
+            if not self.get(0, j).connect_left(0):
                 return False
-            if not self.get(self.width-1, j).connectRight(0):
+            if not self.get(self.width-1, j).connect_right(0):
                 return False
         return True
 
@@ -150,28 +150,28 @@ class Grille():
         # Constrain the tuile above
         if t.y > 0 and self.get(t.x, t.y-1).assigned is None:
             above = copy.deepcopy(self.get(t.x, t.y-1))
-            if not above.connectDown(t.getUp()):
+            if not above.connect_down(t.getUp()):
                 return False
             if len(above.possible) != len(self.get(t.x, t.y-1).possible):
                 self.update_tuile(above)
         # Constrain the tuile below
         if t.y < self.height-1 and self.get(t.x, t.y+1).assigned is None:
             below = copy.deepcopy(self.get(t.x, t.y+1))
-            if not below.connectUp(t.getDown()):
+            if not below.connect_up(t.getDown()):
                 return False
             if len(below.possible) != len(self.get(t.x, t.y+1).possible):
                 self.update_tuile(below)
         # Constrain the tuile left
         if t.x > 0 and self.get(t.x-1, t.y).assigned is None:
             left = copy.deepcopy(self.get(t.x-1, t.y))
-            if not left.connectRight(t.getLeft()):
+            if not left.connect_right(t.getLeft()):
                 return False
             if len(left.possible) != len(self.get().possible):
                 self.update_tuile(left)
         # Constrain the tuile right
         if t.x < self.width-1 and self.get(t.x+1, t.y).assigned is None:
             right = copy.deepcopy(self.get(t.x+1, t.y))
-            if not right.connectLeft(t.getRight()):
+            if not right.connect_left(t.getRight()):
                 return False
             if len(right.possible) != len(self.get(t.x+1, t.y).possible):
                 self.update_tuile(right)
