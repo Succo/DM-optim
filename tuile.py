@@ -21,7 +21,7 @@ def get_possible(val):
 
 class Tuile():
     """ tuile stores information about a tuile state
-    and it's possible rotation"""
+    and it's possible rotations"""
     def __init__(self, val, x, y):
         val = int(val, 16)
         self.possible = get_possible(val)
@@ -37,6 +37,7 @@ class Tuile():
         return len(self.possible) != 0
 
     def get(self, orientation):
+        """ Gets the value of a conection along an orientation (0, 1, 2, 3) """
         return (self.assigned >> orientation) & 1
 
 
@@ -70,6 +71,7 @@ class Grille():
             print(line)
 
     def picture_from_sol(self, sol):
+        """ generate an image from the basic tiles to illustrate a solution """
         tiles = [cv2.imread("tuile/{}.png".format(format(i, 'x')), -1)
                  for i in range(16)]
         lines = []
@@ -103,7 +105,6 @@ class Grille():
         else:
             for orient in t.possible:
                 t.assigned = orient
-                # self.pretty_print()
                 history = self.save_context()
                 if not self.forward_check(t):
                     yield None
@@ -143,6 +144,7 @@ class Grille():
         return choice
 
     def forward_check(self, t):
+        """ update possible orientation for all tuiles around a tuile """
         for idx, (x, y) in enumerate([(0, -1), (-1, 0), (0, 1), (1, 0)]):
             new_x = t.x + x
             new_y = t.y + y
