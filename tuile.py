@@ -147,28 +147,28 @@ class Grille():
         return choice
 
     def forward_check(self, t):
-        # Constrain the one above
+        # Constrain the tuile above
         if t.y > 0 and self.get(t.x, t.y-1).assigned is None:
             above = copy.deepcopy(self.get(t.x, t.y-1))
             if not above.connectDown(t.getUp()):
                 return False
             if len(above.possible) != len(self.get(t.x, t.y-1).possible):
                 self.update_tuile(above)
-        # Constrain the one below
+        # Constrain the tuile below
         if t.y < self.height-1 and self.get(t.x, t.y+1).assigned is None:
             below = copy.deepcopy(self.get(t.x, t.y+1))
             if not below.connectUp(t.getDown()):
                 return False
             if len(below.possible) != len(self.get(t.x, t.y+1).possible):
                 self.update_tuile(below)
-        # Constrain the one left
+        # Constrain the tuile left
         if t.x > 0 and self.get(t.x-1, t.y).assigned is None:
             left = copy.deepcopy(self.get(t.x-1, t.y))
             if not left.connectRight(t.getLeft()):
                 return False
             if len(left.possible) != len(self.get().possible):
                 self.update_tuile(left)
-        # Constrain the one right
+        # Constrain the tuile right
         if t.x < self.width-1 and self.get(t.x+1, t.y).assigned is None:
             right = copy.deepcopy(self.get(t.x+1, t.y))
             if not right.connectLeft(t.getRight()):

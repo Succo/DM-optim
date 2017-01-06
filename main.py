@@ -16,12 +16,13 @@ def main():
     for line in sys.stdin:
         if height == 0:
             width = len(line)-1  # -1 for the \n
-        height += 1
         for i in range(width):
             tuiles += [Tuile(line[i], i, height)]
+        height += 1
     g = Grille(width, height, tuiles)
-    g.constrainBorder()
-    g.prettyPrint()
+    g.constrain_border()
+    for sol in g.solve():
+        print(sol)
 
 if __name__ == "__main__":
     main()
