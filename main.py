@@ -20,6 +20,7 @@ def main():
         height += 1
     g = Grille(width, height, tuiles)
     g.constrain_border()
+    g.maintain_arc_consistency()
     for sol in g.solve():
         g.print_sol(sol)
         g.picture_from_sol(sol)

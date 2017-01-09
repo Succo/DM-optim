@@ -40,6 +40,17 @@ class Tuile():
         """ Gets the value of a conection along an orientation (0, 1, 2, 3) """
         return (self.assigned >> orientation) & 1
 
+    def try_get(self, orientation):
+        """ Gets the value of a conection along an orientation (0, 1, 2, 3)
+        but ONLY if possible (either because assigned, or all value have the
+        same connection value """
+        if self.assigned is not None:
+            return (self.assigned >> orientation) & 1
+        conns = set([(val >> orientation) & 1 for val in self.possible])
+        if len(conns) == 1:
+            return conns.pop()
+        return None
+
 
 class Grille():
     """ grille is the main class, has the array of tuile """
@@ -52,6 +63,10 @@ class Grille():
         self.nodes = 0
         # Context, i.e. list of effectued modification
         self.context = []
+        self.maintain_AC = False
+
+    def maintain_arc_consistency(self):
+        self.maintain_AC = True
 
     # utils
     def get(self, x, y):
@@ -106,11 +121,11 @@ class Grille():
             for orient in t.possible:
                 t.assigned = orient
                 history = self.save_context()
-                if not self.forward_check(t):
-                    yield None
-                else:
-                    for sol in self.solve():
-                        yield sol
+                Q = self.forward_check(t)
+                if self.maintain_AC:
+                    self.arc_consistency(Q)
+                for sol in self.solve():
+                    yield sol
                 self.restore_context(history)
                 t.assigned = None
 
@@ -145,6 +160,7 @@ class Grille():
 
     def forward_check(self, t):
         """ update possible orientation for all tuiles around a tuile """
+        Q = set()
         for idx, (x, y) in enumerate([(0, -1), (-1, 0), (0, 1), (1, 0)]):
             new_x = t.x + x
             new_y = t.y + y
@@ -157,4 +173,30 @@ class Grille():
             new_tuile.connect((idx+2) % 4, t.get(idx))
             if len(new_tuile.possible) != len(self.get(new_x, new_y).possible):
                 self.update_tuile(new_tuile)
-        return True
+                Q.add(new_tuile)
+        return Q
+
+    def arc_consistency(self, Q):
+        """ Maintient l'arc de consistance
+        Algorithme AC3
+        """
+        while Q:
+            t = Q.pop()
+            if t.assigned is not None:
+                continue
+            for idx, (x, y) in enumerate([(0, -1), (-1, 0), (0, 1), (1, 0)]):
+                new_x = t.x + x
+                new_y = t.y + y
+                if new_x < 0 or new_x > self.width-1 or\
+                   new_y < 0 or new_y > self.height-1:
+                    continue
+                new_tuile = copy.deepcopy(self.get(new_x, new_y))
+                if new_tuile.assigned is not None:
+                    continue
+                conn = t.try_get(idx)
+                if conn is not None:
+                    new_tuile.connect((idx+2) % 4, conn)
+                    if len(new_tuile.possible) != \
+                       len(self.get(new_x, new_y).possible):
+                        self.update_tuile(new_tuile)
+                        Q.add(new_tuile)
