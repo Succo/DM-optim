@@ -1,4 +1,5 @@
 import copy
+import sys
 
 import cv2
 import numpy as np
@@ -77,12 +78,12 @@ class Grille():
             print(t.assigned)
         print()
 
-    def print_sol(self, sol):
+    def print_sol(self, sol, f=sys.stdout):
         for i in range(self.height):
             line = ""
             for j in range(self.width):
                 line += format(sol[i*self.width+j], 'x')
-            print(line)
+            print(line, file=f)
 
     def picture_from_sol(self, sol, filename):
         """ generate an image from the basic tiles to illustrate a solution """
