@@ -5,7 +5,8 @@ import sys
 from tuile import Grille, Tuile
 
 
-def grid_from_stdin():
+def grid_from_stdin(args):
+    """ Read a grid from stdin and treats its solutions """
     height = 0
     width = 0
     tuiles = []
@@ -15,10 +16,15 @@ def grid_from_stdin():
         for i in range(width):
             tuiles += [Tuile(line[i], i, height)]
         height += 1
-    return Grille(width, height, tuiles)
+    g = Grille(width, height, tuiles)
+    if "-a" in args:
+        g.maintain_arc_consistency()
+    g.constrain_border()
+    sols = [sol for sol in g.solve()]
+    process_sols(g, sols, args)
 
 
-def generate_grid(args):
+def random_grid(args):
     """ generates a grid of random tuiles """
     values = [format(i, 'x') for i in range(16)]
     side_values = [format(i, 'x') for i in range(15)]
@@ -42,24 +48,26 @@ def generate_grid(args):
     return Grille(width, height, tuiles)
 
 
-def main():
-    args = sys.argv
-    if len(args) < 2 or args[1] not in ["-s", "-g"] or "-h" in args:
-        print("Run the program with -s to read from stdin or -g and size")
-        print("Use -a to maintain arc consistency in the solver")
-        print("Use -p to output all solutions to the grid")
-        print("Use -i to save pictures of the grid in 'out'")
-        print("Default it only shows one solutions and whether it's unique")
-        print("-h for this message and exit")
-        return
-    if args[1] == "-s":
-        g = grid_from_stdin()
-    else:
-        g = generate_grid(args[2:])
+def generate_grid(args):
+    """ Generates a random grid and treats it according to args
+        Can be forced to find a grid with at least a solution """
+    g = random_grid(args)
     g.constrain_border()
     if "-a" in args:
         g.maintain_arc_consistency()
     sols = [sol for sol in g.solve()]
+    while "-f" in args and len(sols) == 0:
+            g = random_grid(args)
+            g.constrain_border()
+            if "-a" in args:
+                g.maintain_arc_consistency()
+            sols = [sol for sol in g.solve()]
+    process_sols(g, sols, args)
+
+
+def process_sols(g, sols, args):
+    """ Prints and output information related to a solution
+        depanding on arguments """
     if "-p" in args or "-i" in args:
         # treating all solutions
         for i, sol in enumerate(sols):
@@ -76,6 +84,25 @@ def main():
         else:
             g.print_sol(sols[0])
             print("# la solution n'est pas unique")
+
+
+def main():
+    """ Main just get args and either use predefined grid
+        or randomly generated grid """
+    args = sys.argv
+    if len(args) < 2 or args[1] not in ["-s", "-g"] or "-h" in args:
+        print("Run the program with -s to read from stdin or -g and size")
+        print("Use -a to maintain arc consistency in the solver")
+        print("Use -p to output all solutions to the grid")
+        print("Use -i to save pictures of the grid in 'out'")
+        print("When generating add -f to generate until a solution id found")
+        print("Default it only shows one solutions and whether it's unique")
+        print("-h for this message and exit")
+        return
+    if args[1] == "-s":
+        grid_from_stdin(args[2:])
+    else:
+        generate_grid(args[2:])
 
 if __name__ == "__main__":
     main()
