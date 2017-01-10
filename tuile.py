@@ -85,7 +85,7 @@ class Grille():
                 line += format(sol[i*self.width+j], 'x')
             print(line)
 
-    def picture_from_sol(self, sol):
+    def picture_from_sol(self, sol, filename):
         """ generate an image from the basic tiles to illustrate a solution """
         tiles = [cv2.imread("tuile/{}.png".format(format(i, 'x')), -1)
                  for i in range(16)]
@@ -94,7 +94,7 @@ class Grille():
             lines += [np.concatenate([tiles[sol[i*self.width + j]] for
                                       j in range(self.width)], axis=1)]
         vis = np.concatenate(lines, axis=0)
-        cv2.imwrite("out/graph.png", vis)
+        cv2.imwrite("out/{}.png".format(filename), vis)
 
     # Solver core function
     def constrain_border(self):

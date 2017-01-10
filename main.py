@@ -59,9 +59,23 @@ def main():
     g.constrain_border()
     if "-a" in args:
         g.maintain_arc_consistency()
-    for sol in g.solve():
-        g.print_sol(sol)
-        g.picture_from_sol(sol)
+    sols = [sol for sol in g.solve()]
+    if "-p" in args or "-i" in args:
+        # treating all solutions
+        for i, sol in enumerate(sols):
+            if "-p" in args:
+                g.print_sol(sol)
+            if "-i" in args:
+                g.picture_from_sol(sol, "grid_{}".format(i))
+    else:
+        if len(sols) == 0:
+            print("# pas de solutions")
+        elif len(sols) == 1:
+            g.print_sol(sols[0])
+            print("# la solution est unique")
+        else:
+            g.print_sol(sols[0])
+            print("# la solution n'est pas unique")
 
 if __name__ == "__main__":
     main()
