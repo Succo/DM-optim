@@ -25,12 +25,11 @@ def grid_from_stdin(args):
 
 
 def random_grid(height, width, save_initial_values=False):
-    """ generates a grid of random tuiles """
-    values = [format(i, 'x') for i in range(16)]
-    side_values = [format(i, 'x') for i in range(15)]
-    corner_values = [format(i, 'x') for i in range(6)] +\
-                    [format(i, 'x') for i in range(8, 10)] +\
-                    [format(12, 'x')]
+    """ generates a grid of random tuiles
+        optionnaly also output initial_values for testing """
+    values = [format(i, 'x') for i in [0, 1, 3, 5, 7, 15]]
+    side_values = [format(i, 'x') for i in [0, 1, 3, 5, 7]]
+    corner_values = [format(i, 'x') for i in [0, 1, 3, 5]]
     tuiles = []
     if save_initial_values:
         initial_values = []
