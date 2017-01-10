@@ -44,15 +44,21 @@ def generate_grid(args):
 
 def main():
     args = sys.argv
-    if len(args) < 2 or args[1] not in ["-s", "-g", "-h"]:
+    if len(args) < 2 or args[1] not in ["-s", "-g"] or "-h" in args:
         print("Run the program with -s to read from stdin or -g and size")
+        print("Use -a to maintain arc consistency in the solver")
+        print("Use -p to output solutions to the grid")
+        print("Use -i to save pictures of the grid in 'out'")
+        print("Default it only shows one solutions and whether it's unique")
+        print("-h for this message and exit")
         return
     if args[1] == "-s":
         g = grid_from_stdin()
     else:
         g = generate_grid(args[2:])
     g.constrain_border()
-    g.maintain_arc_consistency()
+    if "-a" in args:
+        g.maintain_arc_consistency()
     for sol in g.solve():
         g.print_sol(sol)
         g.picture_from_sol(sol)
