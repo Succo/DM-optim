@@ -47,7 +47,7 @@ def main():
     if len(args) < 2 or args[1] not in ["-s", "-g"] or "-h" in args:
         print("Run the program with -s to read from stdin or -g and size")
         print("Use -a to maintain arc consistency in the solver")
-        print("Use -p to output solutions to the grid")
+        print("Use -p to output all solutions to the grid")
         print("Use -i to save pictures of the grid in 'out'")
         print("Default it only shows one solutions and whether it's unique")
         print("-h for this message and exit")
