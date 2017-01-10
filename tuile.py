@@ -12,10 +12,9 @@ def rotate(val):
 def get_possible(val):
     """get_possible generates all rotations possible for a value """
     possible = [val]
-    tmp = val
-    while rotate(tmp) != val:
-        tmp = rotate(tmp)
-        possible += [tmp]
+    while rotate(val) != possible[0]:
+        val = rotate(val)
+        possible += [val]
     return possible
 
 
