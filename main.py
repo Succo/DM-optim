@@ -24,16 +24,13 @@ def grid_from_stdin(args):
     process_sols(g, sols, args)
 
 
-def random_grid(args):
+def random_grid(height, width):
     """ generates a grid of random tuiles """
     values = [format(i, 'x') for i in range(16)]
     side_values = [format(i, 'x') for i in range(15)]
-    corner_values = [format(i, 'x') for i in range(12)]
-    height = int(args[0])
-    if len(args) > 1 and args[1].isdigit():
-        width = int(args[1])
-    else:
-        width = height
+    corner_values = [format(i, 'x') for i in range(6)] +\
+                    [format(i, 'x') for i in range(8, 10)] +\
+                    [format(12, 'x')]
     tuiles = []
     for i in range(height):
         for j in range(width):
@@ -51,13 +48,18 @@ def random_grid(args):
 def generate_grid(args):
     """ Generates a random grid and treats it according to args
         Can be forced to find a grid with at least a solution """
-    g = random_grid(args)
+    height = int(args[0])
+    if len(args) > 1 and args[1].isdigit():
+        width = int(args[1])
+    else:
+        width = height
+    g = random_grid(height, width)
     g.constrain_border()
     if "-a" in args:
         g.maintain_arc_consistency()
     sols = [sol for sol in g.solve()]
     while "-f" in args and len(sols) == 0:
-            g = random_grid(args)
+            g = random_grid(height, width)
             g.constrain_border()
             if "-a" in args:
                 g.maintain_arc_consistency()
