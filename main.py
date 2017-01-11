@@ -2,7 +2,8 @@
 
 import random
 import sys
-from tuile import Grille, Tuile
+from tuile import Grille, Tuile, get_possible
+from generate import Grille_Generator
 
 
 def grid_from_stdin(args):
@@ -24,15 +25,13 @@ def grid_from_stdin(args):
     process_sols(g, sols, args)
 
 
-def random_grid(height, width, save_initial_values=False):
+def random_grid(height, width):
     """ generates a grid of random tuiles
         optionnaly also output initial_values for testing """
     values = [format(i, 'x') for i in [0, 1, 3, 5, 7, 15]]
     side_values = [format(i, 'x') for i in [0, 1, 3, 5, 7]]
     corner_values = [format(i, 'x') for i in [0, 1, 3, 5]]
     tuiles = []
-    if save_initial_values:
-        initial_values = []
     for i in range(height):
         for j in range(width):
             if (i == 0 or i == height-1) and\
@@ -44,13 +43,7 @@ def random_grid(height, width, save_initial_values=False):
             else:
                 val = random.choice(values)
             tuiles += [Tuile(val, j, i)]
-            if save_initial_values:
-                initial_values += [int(val, 16)]
-
-    if save_initial_values:
-        return Grille(width, height, tuiles), initial_values
-    else:
-        return Grille(width, height, tuiles)
+    return Grille(width, height, tuiles)
 
 
 def generate_grid(args):
@@ -76,16 +69,16 @@ def generate_grid(args):
 
 
 def random_sample(max_size):
-    """ Generates random grids and store them is their default state """
+    """ Generates random grids and store them in their default state
+        Useful to have grids for prototyping """
     max_size = int(max_size)
     for i in range(1, max_size):
-        sols = []
-        while len(sols) == 0:
-            g, vals = random_grid(i, i, save_initial_values=True)
-            g.constrain_border()
-            sols = [sol for sol in g.solve()]
+        print(i)
+        g = Grille_Generator(i, i)
+        g.generate()
         with open("input/{}x{}".format(i, i), 'w') as f:
-            g.print_sol(vals, f=f)
+            inputs = [min(get_possible(val)) for val in g.tuiles]
+            g.print_sol(inputs, f=f)
 
 
 def process_sols(g, sols, args):
