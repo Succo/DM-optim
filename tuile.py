@@ -83,7 +83,7 @@ class Grille():
             line = ""
             for j in range(self.width):
                 line += format(sol[i*self.width+j], 'x')
-            print(line, file=f)
+            f.write(line + "\n")
 
     def picture_from_sol(self, sol, filename):
         """ generate an image from the basic tiles to illustrate a solution """

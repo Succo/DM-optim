@@ -21,7 +21,7 @@ class Grille_Generator():
             line = ""
             for j in range(self.width):
                 line += format(sol[i*self.width+j], 'x')
-            print(line, file=f)
+            f.write(line + "\n")
 
     # generator core function
     def generate(self):
