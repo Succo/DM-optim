@@ -71,7 +71,7 @@ def random_sample(max_size):
     """ Generates random solvable grids and store them in their default state
         Useful to have grids for prototyping """
     max_size = int(max_size)
-    for i in range(1, max_size):
+    for i in range(1, max_size + 1):
         print(i)
         g = Grille_Generator(i, i)
         g.generate()
