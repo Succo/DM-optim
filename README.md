@@ -6,6 +6,16 @@ Tuiles are encoded using integer between 0 and 16 reprensented in base 16.
 The first bit encodes the presence of a connector on the top, the second bit on the left, the third on the bottom and the fourth on the right.
 All tuiles are illustrated in the tuiles folder.
 
-Options are for the grid:
-* `-s` to read the grid from stdin
-* `-g <h> <l>` for a randomly generated grid (`l` is optionnal, grid will be square by default)
+```
+Usage: ./main.py <main arg> <options>
+main args:
+  -s          read a grid from stdin
+  -g <H> <W>  generate a grid of size HxW (W optionnal)
+  -r <n>      populates 'input' with valid grid of 1x1 to nxn
+  -h          print this message and exit
+options:
+  -a          maintain arc consistency in the solver
+  -p          output all solutions to the grid
+  -i          save pictures of all solutions in 'out'
+  -f          with '-g' to force grid to have a solution
+```
