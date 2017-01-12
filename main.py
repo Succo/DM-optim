@@ -26,8 +26,7 @@ def grid_from_stdin(args):
 
 
 def random_grid(height, width):
-    """ generates a grid of random tuiles
-        optionnaly also output initial_values for testing """
+    """ generates a grid of random tuiles """
     values = [format(i, 'x') for i in [0, 1, 3, 5, 7, 15]]
     side_values = [format(i, 'x') for i in [0, 1, 3, 5, 7]]
     corner_values = [format(i, 'x') for i in [0, 1, 3, 5]]
@@ -69,7 +68,7 @@ def generate_grid(args):
 
 
 def random_sample(max_size):
-    """ Generates random grids and store them in their default state
+    """ Generates random solvable grids and store them in their default state
         Useful to have grids for prototyping """
     max_size = int(max_size)
     for i in range(1, max_size):
@@ -107,14 +106,17 @@ def main():
         or randomly generated grid """
     args = sys.argv
     if len(args) < 2 or args[1] not in ["-s", "-g", "-r"] or "-h" in args:
-        print("Run the program with -s to read from stdin or -g and size")
-        print("Use -a to maintain arc consistency in the solver")
-        print("Use -p to output all solutions to the grid")
-        print("Use -i to save pictures of the grid in 'out'")
-        print("When generating add -f to generate until a solution is found")
-        print("Default: only shows one solutions and whether it's unique")
-        print("-h for this message and exit")
-        print("-r <n> to generate a random samples from 1x1 to nxn")
+        print("Usage: ./main.py <main arg> <options>")
+        print("main args:")
+        print("  -s          read a grid from stdin")
+        print("  -g <H> <W>  generate a grid of size HxW (W optionnal)")
+        print("  -r <n>      populates 'input' with valid grid of 1x1 to nxn")
+        print("  -h          print this message and exit")
+        print("options:")
+        print("  -a          maintain arc consistency in the solver")
+        print("  -p          output all solutions to the grid")
+        print("  -i          save pictures of all solutions in 'out'")
+        print("  -f          with '-g' to force grid to have a solution")
         return
     if args[1] == "-s":
         grid_from_stdin(args[2:])
