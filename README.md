@@ -19,3 +19,10 @@ options:
   -i          save pictures of all solutions in 'out'
   -f          with '-g' to force grid to have a solution
 ```
+
+The grid is solved using boolean variable on tuiles rotations.
+It's done by considering variable domain being the possible rotation accesible to one tuile.
+Domain are reduced a first time by removing impossible combination from the border.
+
+Test on grid up to 10 by 10 in size show that arc consistency tends to impact negatively performances.
+This is most likely due to it introducing many tuile to test even though not enough information on the "parent" tuile has been deduced.
